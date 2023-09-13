@@ -1,4 +1,5 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
+import Spotify from '../util/Spotify'
 import './App.css'
 import SearchBar from '../Components/SearchBar/SearchBar'
 import SearchResults from '../Components/SearchResults/SearchResults'
@@ -6,32 +7,71 @@ import Playlist from '../Components/Playlist/Playlist'
 
 
 
-class App extends React.Component {
-constructor(props) {
-  super(props)
+const App = () => {
+  const [playlistTracks, setPlaylistTracks] = useState([]);
+  const [searchedTracks, setSearchedTracks] = useState([]);
+  const [spotifyToken, setSpotifyToken] = useState(null);
 
-  this.state = {
-    searchResults: [{name: 'name1', artist: 'artist1', album: 'album1', id: 1},
-    {name: 'name2', artist: 'artist2', album: 'album2', id: 2},
-    {name: 'name3', artist: 'artist3', album: 'album3', id: 3},
-  ]
+  useEffect(() => {
+    const spotifyTokenFromUrlFragment = window.location.hash.split('&')[0].substr(14);
+    setSpotifyToken(spotifyTokenFromUrlFragment);
+  }, [])
+
+  function addTrackToPlaylist(track) {
+    setPlaylistTracks(oldPlaylistTracks => {
+      if (oldPlaylistTracks.includes(track)) {
+        return oldPlaylistTracks;
+      }
+      else {
+        return [...oldPlaylistTracks, track];
+      }
+    });
   }
+
+  async function createSpotifyPlaylist(name, trackIds) {
+    await Spotify.createPlaylist(name, trackIds, spotifyToken);
+    setPlaylistTracks([]);
+  }
+
+function addTrackToPlaylist(track) {
+  setPlaylistTracks(oldPlaylistTracks => {
+    if (oldPlaylistTracks.includes(track)) {
+      return oldPlaylistTracks;
+    }
+    else {
+      return [...oldPlaylistTracks, track];
+    }
+  });
 }
 
-  render() {
+  function removeTrackFromPlaylist(track) {
+
+    setPlaylistTracks(oldPlaylistTracks => oldPlaylistTracks.filter((t => track !== t)));
+  }
+  async function searchSpotify(searchTerms) {
+    const results = await Spotify.search(searchTerms, spotifyToken);
+    setSearchedTracks(results);
+  }
+  
     return (
       <div>
       <h1>Ja<span className="highlight">mmm</span>ing</h1>
       <div className="App">
-        <SearchBar />
+        <SearchBar searchSpotify={searchSpotify} />
         <div className="App-playlist">
-          <SearchResults searchResults={this.state.searchResults} />
-          <Playlist />
+          <SearchResults 
+          tracks={searchedTracks} 
+          addTrackToPlaylist={addTrackToPlaylist} 
+          />
+          <Playlist 
+          createSpotifyPlaylist={createSpotifyPlaylist}
+          removeTrackFromPlaylist={removeTrackFromPlaylist} 
+          tracks={playlistTracks}
+          />
         </div>
       </div>
     </div>
     )
-  }
 }
 
 

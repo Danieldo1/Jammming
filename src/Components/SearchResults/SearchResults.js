@@ -1,12 +1,22 @@
 import React from 'react'
 import './SearchResults.css'
-import TrackList from '../TrackList/TrackList'
+import Track from '../Track/Track'
 
  const SearchResults = (props) => {
   return (
     <div className="SearchResults">
-  <h2>Results</h2>
-  <TrackList tracks={props.searchResults} />
+    <h2>Results</h2>
+    <div className="TrackList">
+    {
+        props.tracks.map(track => {
+            return(<Track
+                key={track.id}
+                track={track}
+                trackActionCharacter="+"
+                handleTrackAction={props.addTrackToPlaylist}/>)
+        })
+    }
+    </div>
 </div>
   )
 }
