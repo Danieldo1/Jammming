@@ -14,3 +14,5 @@ Utelize my knowledge of React components, passing state, and requests with the S
  - CLI
 
 ## Link will be live soon
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0f341084-173c-4f76-8ca1-25efdd63acfe/deploy-status)](https://app.netlify.com/sites/jam-dan/deploys)
