@@ -1,5 +1,5 @@
 // const ClientID = b62ef401e79c484fba2fddd745004518
-
+// eslint-disable-next-line
 const token = '36ed97952d624a129a05c74f50c3b612'
 
 class Spotify {

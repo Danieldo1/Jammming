@@ -17,16 +17,6 @@ const App = () => {
     setSpotifyToken(spotifyTokenFromUrlFragment);
   }, [])
 
-  function addTrackToPlaylist(track) {
-    setPlaylistTracks(oldPlaylistTracks => {
-      if (oldPlaylistTracks.includes(track)) {
-        return oldPlaylistTracks;
-      }
-      else {
-        return [...oldPlaylistTracks, track];
-      }
-    });
-  }
 
   async function createSpotifyPlaylist(name, trackIds) {
     await Spotify.createPlaylist(name, trackIds, spotifyToken);
